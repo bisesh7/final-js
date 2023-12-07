@@ -15,7 +15,6 @@ export const fetchBooks = createAsyncThunk("books/fetchBooks", async () => {
     const data = await response.json();
 
     if (data.items) {
-      console.log(data.items);
       return data.items.map((item) => ({
         id: item.id,
         title: item.volumeInfo.title,
@@ -81,7 +80,6 @@ const bookSlice = createSlice({
       };
 
       let featuredBooks = getRandomBooks(state.items, 3);
-      console.log(featuredBooks);
 
       state.featuredBooks = featuredBooks;
     },
@@ -93,7 +91,6 @@ const bookSlice = createSlice({
       };
 
       let latestBooks = getRandomBooks(state.items, 3);
-      console.log(latestBooks);
 
       state.latestBooks = latestBooks;
     },

@@ -9,6 +9,7 @@ import {
   Button,
   Pagination,
   Badge,
+  Spinner,
 } from "react-bootstrap";
 import "../styles/Discover.scss";
 import {
@@ -19,7 +20,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames";
 import { fetchBooks } from "../redux/slices/booksSlice";
-import { css } from "react-spinners";
 
 const Discover = () => {
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const Discover = () => {
     dispatch(decreaseQuantity(bookId));
   };
 
+  const user = useSelector((state) => state.auth.user);
   const cartItems = useSelector((state) => state.cart.items);
 
   return (
@@ -49,7 +50,7 @@ const Discover = () => {
       <h2>Discover New Books</h2>
       {loading ? (
         <div className="d-flex justify-content-center mt-5">
-          <div className={css} />
+          <Spinner animation="border" variant="primary" />
         </div>
       ) : error ? (
         <div className="text-danger mt-3">Error loading books: {error}</div>
@@ -76,6 +77,7 @@ const Discover = () => {
                       <Button
                         variant="primary"
                         className="mb-2 me-2"
+                        hidden={!user}
                         onClick={() => handleAddToCart(book)}
                       >
                         {
@@ -94,6 +96,7 @@ const Discover = () => {
                         <Button
                           variant="danger"
                           className="mb-2"
+                          hidden={!user}
                           onClick={() => handleDecreaseQuantity(book.id)}
                         >
                           -

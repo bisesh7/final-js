@@ -22,6 +22,7 @@ const Home = () => {
 
   const featuredBooks = useSelector((state) => state.book.featuredBooks);
   const latestBooks = useSelector((state) => state.book.latestBooks);
+  const user = useSelector((state) => state.auth.user);
 
   return (
     <div className="home-container">
@@ -37,7 +38,9 @@ const Home = () => {
             Your one-stop destination for discovering and exploring new books.
           </p>
           <Link to="/signup">
-            <Button variant="primary">Get Started</Button>
+            <Button variant="primary" hidden={user}>
+              Get Started
+            </Button>
           </Link>
         </Container>
       </section>

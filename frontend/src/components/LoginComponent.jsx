@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -16,9 +16,17 @@ const LoginPage = () => {
 
   const dispatch = useDispatch();
   const { error } = useSelector((state) => state.auth);
+  const navigateTo = useNavigate();
 
   const handleLogin = (values) => {
-    dispatch(login(values));
+    dispatch(login(values)).then((res) => {
+      console.log(res);
+      if (!res.error) {
+        navigateTo("/");
+      } else {
+        console.log(error);
+      }
+    });
   };
 
   return (
@@ -65,13 +73,8 @@ const LoginPage = () => {
                   />
                 </Form.Group>
 
-                <Button
-                  className="mt-2"
-                  variant="primary"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting ? "Logging in..." : "Log In"}
+                <Button className="mt-2" variant="primary" type="submit">
+                  Log In
                 </Button>
               </Form>
             )}

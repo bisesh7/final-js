@@ -6,6 +6,7 @@ import { Button, Container, Row, Col, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { signUp } from "../redux/slices/authSlice";
 import "../styles/SignUp.scss";
+import { useNavigate } from "react-router-dom";
 
 const SignUpSchema = Yup.object().shape({
   username: Yup.string().required("Username is required"),
@@ -19,8 +20,10 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
 
+  const navigateTo = useNavigate();
+
   const handleSignUp = (values) => {
-    dispatch(signUp(values));
+    dispatch(signUp(values)).then(navigateTo("/login"));
   };
 
   return (

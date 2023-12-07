@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 // Async thunk for user sign up
 export const signUp = createAsyncThunk("auth/signUp", async (userData) => {
   try {
-    const response = await fetch("/api/signup", {
+    const response = await fetch("http://localhost:3001/api/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export const signUp = createAsyncThunk("auth/signUp", async (userData) => {
 // Async thunk for user login
 export const login = createAsyncThunk("auth/login", async (credentials) => {
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch("http://localhost:3001/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,6 +52,7 @@ const initialState = {
   user: null,
   loading: false,
   error: null,
+  token: null,
 };
 
 // Auth slice
@@ -59,8 +60,9 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: (state, action) => {
       state.user = null;
+      state.token = null;
     },
   },
   extraReducers: (builder) => {
@@ -71,7 +73,8 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -83,7 +86,6 @@ const authSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loading = false;
