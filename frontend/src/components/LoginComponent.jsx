@@ -1,91 +1,88 @@
-// Login.js
 import React from "react";
-import { useDispatch } from "react-redux";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Link } from "react-router-dom";
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
+import { Formik, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import "../styles/Login.scss"; // Add your custom styles
 import { login } from "../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Form as BootstrapForm,
-} from "react-bootstrap";
-import "../styles/Login.scss";
+const LoginPage = () => {
+  // Define the validation schema using Yup
+  const validationSchema = Yup.object().shape({
+    email: Yup.string().email("Invalid email address").required("Required"),
+    password: Yup.string().required("Required"),
+  });
 
-const LoginSchema = Yup.object().shape({
-  username: Yup.string().required("Username is required"),
-  password: Yup.string().required("Password is required"),
-});
-
-const Login = () => {
   const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.auth);
 
-  const initialValues = {
-    username: "",
-    password: "",
-  };
-
-  const handleSubmit = (values) => {
+  const handleLogin = (values) => {
     dispatch(login(values));
   };
 
   return (
-    <Container className="login-container">
-      <Row className="justify-content-center align-items-center h-100">
-        <Col md={6}>
-          <Card>
-            <Card.Body>
-              <Card.Title className="text-center mb-4">Login</Card.Title>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={LoginSchema}
-                onSubmit={handleSubmit}
-              >
-                <Form>
-                  <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>Username</BootstrapForm.Label>
-                    <Field
-                      type="text"
-                      name="username"
-                      as={BootstrapForm.Control}
-                    />
-                    <ErrorMessage
-                      name="username"
-                      component="div"
-                      className="text-danger"
-                    />
-                  </BootstrapForm.Group>
+    <Container fluid className="login-container">
+      <Row className="justify-content-center align-items-center vh-100">
+        <Col xs={12} sm={8} md={6} lg={4}>
+          {error && <Alert variant="danger">{error}</Alert>}
+          <h2>Login</h2>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={validationSchema}
+            onSubmit={handleLogin}
+          >
+            {({ isSubmitting, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                {/* Formik form fields go here */}
+                <Form.Group controlId="email">
+                  <Form.Label>Email</Form.Label>
+                  <Field
+                    type="email"
+                    name="email"
+                    as={Form.Control}
+                    placeholder="Enter your email"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-danger"
+                  />
+                </Form.Group>
 
-                  <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>Password</BootstrapForm.Label>
-                    <Field
-                      type="password"
-                      name="password"
-                      as={BootstrapForm.Control}
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="text-danger"
-                    />
-                  </BootstrapForm.Group>
+                <Form.Group controlId="password">
+                  <Form.Label>Password</Form.Label>
+                  <Field
+                    type="password"
+                    name="password"
+                    as={Form.Control}
+                    placeholder="Enter your password"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-danger"
+                  />
+                </Form.Group>
 
-                  <div className="d-flex justify-content-center">
-                    <Button variant="primary" type="submit" block>
-                      Login
-                    </Button>
-                  </div>
-                </Form>
-              </Formik>
-            </Card.Body>
-          </Card>
+                <Button
+                  className="mt-2"
+                  variant="primary"
+                  type="submit"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Log In"}
+                </Button>
+              </Form>
+            )}
+          </Formik>
+          <div className="mt-3 text-center">
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </div>
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default Login;
+export default LoginPage;
