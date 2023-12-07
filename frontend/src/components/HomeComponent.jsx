@@ -1,25 +1,27 @@
-// Home.js
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import "../styles/Home.scss";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchBooks,
+  setFeaturedBooks,
+  setLatestBooks,
+} from "../redux/slices/booksSlice";
+import { Link } from "react-router-dom";
+import "../styles/Login.scss";
 
 const Home = () => {
-  const featuredBooks = [
-    { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald" },
-    { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee" },
-    { id: 3, title: "1984", author: "George Orwell" },
-  ];
+  const dispatch = useDispatch();
 
-  const latestReleases = [
-    { id: 4, title: "The Silent Patient", author: "Alex Michaelides" },
-    { id: 5, title: "Where the Crawdads Sing", author: "Delia Owens" },
-    { id: 6, title: "Educated", author: "Tara Westover" },
-  ];
+  useEffect(() => {
+    dispatch(fetchBooks()).then(() => {
+      dispatch(setFeaturedBooks());
+      dispatch(setLatestBooks());
+    });
+  }, [dispatch]);
 
-  const getPlaceholderImageUrl = (width, height) => {
-    // Use Lorem Picsum for placeholder images
-    return `https://picsum.photos/${width}/${height}`;
-  };
+  const featuredBooks = useSelector((state) => state.book.featuredBooks);
+  const latestBooks = useSelector((state) => state.book.latestBooks);
 
   return (
     <div className="home-container">
@@ -34,23 +36,25 @@ const Home = () => {
           <p>
             Your one-stop destination for discovering and exploring new books.
           </p>
-          <Button variant="primary">Get Started</Button>
+          <Link to="/signup">
+            <Button variant="primary">Get Started</Button>
+          </Link>
         </Container>
       </section>
 
       <section className="featured-section mt-3">
         <Container>
           <h2>Featured Books</h2>
-          <Row>
+          <Row className="featured-section-row">
             {featuredBooks.map((book) => (
               <Col key={book.id} md={4}>
-                <Card>
+                <Card className="h-100 d-flex flex-column">
                   <Card.Img
                     variant="top"
-                    src={getPlaceholderImageUrl(300, 200)}
+                    src={book.imageLinks.thumbnail}
                     alt={book.title}
                   />
-                  <Card.Body>
+                  <Card.Body className="flex-grow-1">
                     <Card.Title>{book.title}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">
                       {book.author}
@@ -66,16 +70,16 @@ const Home = () => {
       <section className="latest-releases-section mt-3 pb-4">
         <Container>
           <h2>Latest Releases</h2>
-          <Row>
-            {latestReleases.map((book) => (
+          <Row className="featured-section-row">
+            {latestBooks.map((book) => (
               <Col key={book.id} md={4}>
-                <Card>
+                <Card className="h-100 d-flex flex-column">
                   <Card.Img
                     variant="top"
-                    src={getPlaceholderImageUrl(300, 200)}
+                    src={book.imageLinks.thumbnail}
                     alt={book.title}
                   />
-                  <Card.Body>
+                  <Card.Body className="flex-grow-1">
                     <Card.Title>{book.title}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">
                       {book.author}

@@ -9,6 +9,9 @@ import Navbar from "./components/NavbarComponent";
 import Footer from "./components/FooterComponent";
 import Discover from "./components/DiscoverComponent";
 import BookDetail from "./components/BookDetail";
+import Cart from "./components/CartComponent";
+import Login from "./components/LoginComponent";
+import SignUp from "./components/SignUpComponent";
 
 const App = () => {
   return (
@@ -19,6 +22,9 @@ const App = () => {
           <Route path="/" element={<HomeComponent />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/book/:id" element={<BookDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

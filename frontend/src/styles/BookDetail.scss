@@ -1,13 +1,13 @@
-// BookDetail.scss
 .book-detail-container {
   background-color: #f2f2f2; // Light gray background color
-  height: 100vh;
+  height: 76.5vh;
   display: flex;
   justify-content: center;
   align-items: center;
 
   .row {
     width: 80%;
+    height: 50%;
   }
 
   .book-image {

@@ -1,4 +1,3 @@
-// Footer.js
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import "../styles/Footer.scss";
@@ -23,12 +22,6 @@ const Footer = () => {
               </li>
               <li>
                 <a href="#discover">Discover</a>
-              </li>
-              <li>
-                <a href="#bookmark">Bookmark</a>
-              </li>
-              <li>
-                <a href="#connect">Connect</a>
               </li>
             </ul>
           </Col>
