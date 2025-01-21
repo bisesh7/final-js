@@ -4,12 +4,12 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
-// Import user controller
-const userController = require("./controllers/userController");
+const path = require("path");
 
-// Load environment variables from .env file
+// Load environment variables
 dotenv.config();
 
+// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -18,24 +18,35 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-// Rate limiting middleware
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 100, // Limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {});
-
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-// Use the user controller for handling user-related routes
+// Static files for React
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+// Routes
+const userController = require("./controllers/userController");
 app.use("/api", userController);
+
+// Catch-all route for React
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+});
 
 // Start the server
 app.listen(PORT, () => {
