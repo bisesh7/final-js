@@ -9,7 +9,6 @@ const path = require("path");
 // Load environment variables
 dotenv.config();
 
-// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3001;
 
@@ -30,22 +29,22 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-db.once("open", () => {
+mongoose.connection.on(
+  "error",
+  console.error.bind(console, "MongoDB connection error:")
+);
+mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-// Static files for React
-app.use(express.static(path.join(__dirname, "../client/build")));
-
-// Routes
+// API routes
 const userController = require("./controllers/userController");
 app.use("/api", userController);
 
-// Catch-all route for React
+// Set static folder
+app.use(express.static(path.join(__dirname, "frontend/build")));
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
 });
 
 // Start the server
