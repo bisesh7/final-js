@@ -45,7 +45,7 @@ app.use("/api", userController);
 
 // Catch-all route for React
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
 // Start the server
